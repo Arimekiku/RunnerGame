@@ -42,10 +42,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2076399478334519667}
   - component: {fileID: 2355758497591755725}
+  - component: {fileID: 2239906817510767433}
   - component: {fileID: 4812338940221959772}
   - component: {fileID: 2280889377071121104}
   - component: {fileID: 7354178159806507722}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,6 +85,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!54 &2239906817510767433
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076399478334519671}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 1
 --- !u!114 &4812338940221959772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1256,6 +1273,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 6661306943988295795, guid: ba33cc6266c6ecc4cb651d64af5a6599,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7499209467646926844, guid: ba33cc6266c6ecc4cb651d64af5a6599,
         type: 3}

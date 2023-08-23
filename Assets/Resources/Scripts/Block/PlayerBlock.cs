@@ -25,10 +25,10 @@ public class PlayerBlock : MonoBehaviour
 
     private void FixedUpdate()
     {
-        CheckForBoxCast();
+        CheckForAnyEnemyBlock();
     }
 
-    private void CheckForBoxCast()
+    private void CheckForAnyEnemyBlock()
     {
         Vector3 boxSize = transform.localScale / _sizeShrinkMultiplier;
 

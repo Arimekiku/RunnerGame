@@ -45,7 +45,7 @@ public class Track : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out PlayerBlock _))
+        if (other.TryGetComponent(out PlayerBehaviour _))
             OnTrackCompleted?.Invoke(true);
     }
 }
