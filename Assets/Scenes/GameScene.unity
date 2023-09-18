@@ -161,7 +161,7 @@ MonoBehaviour:
   _uiManager: {fileID: 1022896681}
   _blockPrefab: {fileID: -5162843873495724892, guid: ba33cc6266c6ecc4cb651d64af5a6599,
     type: 3}
-  _initialTrackObjectCount: 2
+  _initialTrackObjectCount: 4
   _possibleTrackInstances:
   - {fileID: -6831566554760135841, guid: 69568815e4a768c4db0b8d1b88d22824, type: 3}
   - {fileID: -6831566554760135841, guid: 248b5db4bac9c824dae81fdddf1ac900, type: 3}
@@ -1193,7 +1193,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1464,7 +1464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 4, y: 8, z: -10}
+  m_FollowOffset: {x: 8, y: 16, z: -20}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1

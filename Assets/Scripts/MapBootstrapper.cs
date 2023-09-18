@@ -1,24 +1,25 @@
 ﻿using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MapBootstrapper : MonoBehaviour
 {
     [Header("Player Preferences")]
-    [SerializeField] private Transform _playerSpawnPosition;
-    [SerializeField] private PlayerBehaviour _playerPrefab;
-    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+    [SerializeField] private Transform PlayerSpawnPosition;
+    [SerializeField] private PlayerBehaviour PlayerPrefab;
+    [SerializeField] private CinemachineVirtualCamera VirtualCamera;
 
     [Header("UI Preferences")] 
-    [SerializeField] private Canvas _textPrefab;
-    [SerializeField] private UIManager _uiManager;
+    [SerializeField] private Canvas TextPrefab;
+    [SerializeField] private UIManager UIManager;
 
     [Header("Block Preferences")] 
     [SerializeField] private PlayerBlock _blockPrefab;
 
     [Header("Track Preferences")]
-    [SerializeField] private int _initialTrackObjectCount;
-    [SerializeField] private Track[] _possibleTrackInstances;
+    [SerializeField] private int InitialTrackObjectCount;
+    [SerializeField] private Track[] PossibleTrackInstances;
 
     private TrackFactory _trackFactory;
     private BlockFactory _blockFactory;
@@ -33,12 +34,12 @@ public class MapBootstrapper : MonoBehaviour
         InitTextFactory();
         InitTrack();
 
-        _uiManager.OnRestartShow += _playerInput.DisableInput;
+        UIManager.OnRestartShow += _playerInput.DisableInput;
     }
 
     private void InitTextFactory()
     {
-        _uiTextTemplateFactory = new(_playerInstance.PlayerModel, _textPrefab, Camera.main);
+        _uiTextTemplateFactory = new(_playerInstance.PlayerModel, TextPrefab, Camera.main);
         _playerInstance.OnNewBlock += _uiTextTemplateFactory.SpawnTextTemplate;
     }
 
@@ -49,22 +50,22 @@ public class MapBootstrapper : MonoBehaviour
 
     private void InitPlayer()
     {
-        _playerInstance = Instantiate(_playerPrefab, _playerSpawnPosition.position, quaternion.identity);
+        _playerInstance = Instantiate(PlayerPrefab, PlayerSpawnPosition.position, quaternion.identity);
         _playerInstance.Init();
 
         _playerInput = _playerInstance.GetComponent<PlayerInput>();
-        _playerInput.Init(_uiManager);
+        _playerInput.Init(UIManager);
         
-        _playerInstance.BlockManager.OnLose += _uiManager.ShowRestartSection;
+        _playerInstance.BlockManager.OnLose += UIManager.ShowRestartSection;
 
-        _virtualCamera.Follow = _playerInstance.transform;
+        VirtualCamera.Follow = _playerInstance.transform;
     }
 
     private void InitTrack()
     {
-        _trackFactory = new(_possibleTrackInstances, Vector3.zero, _blockFactory);
+        _trackFactory = new(PossibleTrackInstances, Vector3.zero, _blockFactory);
 
-        for (int i = 0; i < _initialTrackObjectCount; i++)
+        for (int i = 0; i < InitialTrackObjectCount; i++)
             _trackFactory.SpawnNextTrackSegment();
     }
 }
