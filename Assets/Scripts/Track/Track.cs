@@ -13,7 +13,7 @@ public class Track : MonoBehaviour
     [SerializeField] private Transform _trackGround;
 
     [Header("Camera Shake Trigger")] 
-    [SerializeField]private CameraScreenShakeTrigger _cameraScreenShakeTrigger;
+    [SerializeField] private CameraScreenShakeTrigger _cameraScreenShakeTrigger;
 
     public Transform TrackGround => _trackGround;
     public BlockPickup[] Pickups => _pickups;
