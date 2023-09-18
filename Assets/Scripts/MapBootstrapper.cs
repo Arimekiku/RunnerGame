@@ -1,7 +1,6 @@
 ﻿using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class MapBootstrapper : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class MapBootstrapper : MonoBehaviour
     [SerializeField] private UIManager UIManager;
 
     [Header("Block Preferences")] 
-    [SerializeField] private PlayerBlock _blockPrefab;
+    [SerializeField] private PlayerBlock BlockPrefab;
 
     [Header("Track Preferences")]
     [SerializeField] private int InitialTrackObjectCount;
@@ -45,7 +44,7 @@ public class MapBootstrapper : MonoBehaviour
 
     private void InitBlocksFactory()
     {
-        _blockFactory = new(_blockPrefab, _playerInstance);
+        _blockFactory = new(BlockPrefab, _playerInstance);
     }
 
     private void InitPlayer()
