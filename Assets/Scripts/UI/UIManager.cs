@@ -2,27 +2,38 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
+using VContainer;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup _restartSection;
-    [SerializeField] private CanvasGroup _startSection;
+    [SerializeField] private CanvasGroup RestartSection;
+    [SerializeField] private CanvasGroup StartSection;
 
-    public event Action OnRestartShow;
+    private IPlayerInput _playerInput;
+    
+    [Inject]
+    public void Init(BlockManager blockManager, IPlayerInput playerInput)
+    {
+        blockManager.OnLose += ShowRestartSection;
+        playerInput.OnScreenTap += ToggleStartSection;
+        
+        _playerInput = playerInput;
+    }
     
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void ShowRestartSection()
+    private void ShowRestartSection()
     {
-        OnRestartShow?.Invoke();
-        _restartSection.DOFade(1, 1f);
+        _playerInput.DisableInput();
+        RestartSection.DOFade(1, 1f);
     }
 
-    public void ToggleStartSection(bool isVisible)
+    private void ToggleStartSection(bool isVisible)
     {
-        _startSection.DOFade(isVisible ? 1 : 0, 1f);
+        StartSection.DOFade(isVisible ? 1 : 0, 1f);
     }
 }

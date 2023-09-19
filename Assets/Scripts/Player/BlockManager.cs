@@ -4,19 +4,13 @@ using UnityEngine;
 
 public class BlockManager
 {
-    private readonly List<PlayerBlock> _blocks;
+    private readonly List<PlayerBlock> _blocks = new();
 
-    public event Action OnLose; 
-
-    public BlockManager(PlayerBlock[] initialBlocks)
-    {
-        _blocks = new(initialBlocks);
-        _blocks.ForEach(b => b.OnCollideWithEnemy += RemoveBlock);
-    }
+    public event Action OnLose;
     
     public void AddBlock(PlayerBlock newBlock)
     {
-        PlayerBlock lastBlock = _blocks[^1];
+        PlayerBlock lastBlock = _blocks.Count != 0 ? _blocks[^1] : newBlock;
 
         newBlock.transform.position = lastBlock.transform.position + Vector3.up;
         _blocks.Add(newBlock);

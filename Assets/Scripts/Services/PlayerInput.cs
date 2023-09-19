@@ -1,30 +1,26 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using VContainer.Unity;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : IPlayerInput, ITickable
 {
-    private PlayerBehaviour _playerBehaviour;
-    private UIManager _uiManager;
+    public event Action<float> OnScreenHold;
+    public event Action<bool> OnScreenTap;
 
     private bool _gameDisabled;
 
-    public void Init(UIManager uiManager)
+    public void Tick()
     {
-        _playerBehaviour = GetComponent<PlayerBehaviour>();
-        _uiManager = uiManager;
-    }
-
-    private void Update()
-    {
+        if (_gameDisabled) 
+            return;
+        
         HandleCharacterMovement();
     }
 
     private void HandleCharacterMovement()
     {
-        if (_gameDisabled) 
-            return;
-        
         if (Input.GetMouseButtonDown(0))
-            _uiManager.ToggleStartSection(false);
+            OnScreenTap?.Invoke(true);
 
         if (Input.GetMouseButton(0))
         {
@@ -32,13 +28,12 @@ public class PlayerInput : MonoBehaviour
             //So we divide current mouse position with screen resolution (0; 1)
             //Then multiply by 4 (0; 4) and minus 2 so we get [-2; 2]
             float castedWorldPosition = Input.mousePosition.x / Screen.currentResolution.width * 4 - 2;
-
-            _playerBehaviour.MoveSideways(castedWorldPosition);
-            _playerBehaviour.MoveForward();
+            
+            OnScreenHold?.Invoke(castedWorldPosition);
         }
 
         if (Input.GetMouseButtonUp(0))
-            _uiManager.ToggleStartSection(true);
+            OnScreenTap?.Invoke(false);
     }
 
     public void DisableInput()

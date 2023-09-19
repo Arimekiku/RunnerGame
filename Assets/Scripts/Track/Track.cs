@@ -1,51 +1,41 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
+using VContainer;
 
 public class Track : MonoBehaviour
 {
     [Header("Blocks Preferences")]
-    [SerializeField] private BlockPickup[] _pickups;
+    [SerializeField] private BlockPickup[] LevelPickups;
     
     [Header("Spawn Preferences")]
-    [SerializeField] private Vector3 _offset;
-    [SerializeField] private AnimationCurve _spawnAnimationCurve;
-    [SerializeField] private Transform _trackGround;
+    [SerializeField] private Transform LevelGround;
 
     [Header("Camera Shake Trigger")] 
-    [SerializeField] private CameraScreenShakeTrigger _cameraScreenShakeTrigger;
+    [SerializeField] private CameraScreenShakeTrigger CameraScreenShakeTrigger;
 
-    public Transform TrackGround => _trackGround;
-    public BlockPickup[] Pickups => _pickups;
+    public Transform Ground => LevelGround;
     
-    public event Action<bool> OnTrackCompleted;
+    public event Action<Transform> OnTrackCompleted;
     
-    private Vector3 _targetPosition;
-    
-    public void Init()
+    private Transform _parent;
+
+    [Inject]
+    public void Init(LevelBuilder parent, BlockFactory blockFactory)
     {
-        _targetPosition = transform.position;
-
-        _cameraScreenShakeTrigger.Init();
+        _parent = parent.transform;
+        
+        foreach (BlockPickup blockPickup in LevelPickups)
+            blockPickup.OnPickupEvent += blockFactory.CreateInstance;
     }
-
-    public IEnumerator SpawnAnimation()
+    
+    public void Awake()
     {
-        transform.position += _offset;
-        float currentTime = 0f;
-
-        while (transform.position != _targetPosition)
-        {
-            transform.position = Vector3.Lerp(transform.position, _targetPosition, _spawnAnimationCurve.Evaluate(currentTime));
-            yield return new WaitForEndOfFrame();
-
-            currentTime += Time.fixedDeltaTime;
-        }
+        CameraScreenShakeTrigger.Init();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out PlayerBehaviour _))
-            OnTrackCompleted?.Invoke(true);
+            OnTrackCompleted?.Invoke(_parent);
     }
 }

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEngine;
+﻿using UnityEngine;
+using VContainer;
 using Random = UnityEngine.Random;
 
 public class TrackFactory : GameInstanceFactory
@@ -12,9 +11,8 @@ public class TrackFactory : GameInstanceFactory
     private const string FifthTrackPrefabPath = "Prefabs/Tracks/Track05";
     
     private Vector3 _currentSpawnPosition;
-    private readonly BlockFactory _blockFactory;
 
-    public TrackFactory(Transform parent, BlockFactory blockFactory) : base(parent)
+    public TrackFactory(IObjectResolver objectResolver) : base(objectResolver)
     {
         Track firstTrackPrefab = Resources.Load<Track>(FirstTrackPrefabPath);
         DefaultPrefabsList.Add(firstTrackPrefab);
@@ -30,27 +28,20 @@ public class TrackFactory : GameInstanceFactory
         
         Track fifthTrackPrefab = Resources.Load<Track>(FifthTrackPrefabPath);
         DefaultPrefabsList.Add(fifthTrackPrefab);
-        
-        _currentSpawnPosition = parent.position;
-        _blockFactory = blockFactory;
+
+        _currentSpawnPosition = Vector3.zero;
     }
 
-    public void CreateInstance(bool playAnimation = false)
+    public void CreateInstance(Transform parent)
     {
         Track randomTrackToSpawn = DefaultPrefabsList[Random.Range(0, DefaultPrefabsList.Count)] as Track;
-        Track newTrack = CreateInstanceByObject(randomTrackToSpawn);
+        Track newTrack = CreateInstanceByObject(randomTrackToSpawn, parent);
+        newTrack.transform.position = _currentSpawnPosition;
         
-        float blockLength = newTrack.TrackGround.transform.localScale.z;
+        float blockLength = newTrack.Ground.transform.localScale.z;
         Vector3 offset = new(0, 0, blockLength);
         _currentSpawnPosition += offset;
 
-        newTrack.Init();
         newTrack.OnTrackCompleted += CreateInstance;
-
-        foreach (BlockPickup blockPickup in newTrack.Pickups)
-            blockPickup.OnPickupEvent += _blockFactory.CreateInstance;
-        
-        if (playAnimation)
-            newTrack.StartCoroutine(newTrack.SpawnAnimation());
     }
 }

@@ -9,7 +9,7 @@ public class PlayerAnimator : MonoBehaviour
     
     private static readonly int Jump = Animator.StringToHash("Jump");
 
-    public void Init()
+    public void Awake()
     {
         _ragdollBodies = _playerRagdollAnimator.GetComponentsInChildren<Rigidbody>();
         

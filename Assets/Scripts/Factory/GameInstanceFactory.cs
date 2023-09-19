@@ -1,29 +1,31 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 public class GameInstanceFactory
 {
     protected readonly List<MonoBehaviour> DefaultPrefabsList;
-    private readonly Transform _parent;
+    private readonly IObjectResolver _objectResolver;
 
-    protected GameInstanceFactory(Transform instancesParent)
+    protected GameInstanceFactory(IObjectResolver objectResolver)
     {
-        _parent = instancesParent;
+        _objectResolver = objectResolver;
 
         DefaultPrefabsList = new();
     }
 
-    protected T CreateInstanceByObject<T>(T prefabToSpawn) where T : MonoBehaviour
+    protected T CreateInstanceByObject<T>(T prefabToSpawn, Transform parent = null) where T : MonoBehaviour
     {
         T seekingPrefab = DefaultPrefabsList.Find(b => b == prefabToSpawn) as T;
 
-        return Object.Instantiate(seekingPrefab, _parent);
+        return _objectResolver.Instantiate(seekingPrefab, parent);
     } 
     
-    protected T CreateInstanceByType<T>() where T : MonoBehaviour
+    protected T CreateInstanceByType<T>(Transform parent = null) where T : MonoBehaviour
     {
         T seekingPrefab = DefaultPrefabsList.Find(b => b is T) as T;
 
-        return Object.Instantiate(seekingPrefab, _parent);
+        return _objectResolver.Instantiate(seekingPrefab, parent);
     } 
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using VContainer;
 
 public class PlayerBlock : MonoBehaviour
 {
-    [SerializeField] private float _maxRaycastDistance;
-    [SerializeField] private float _sizeShrinkMultiplier;
-    [SerializeField] private BoxCollider _collider;
+    [SerializeField] private float MaxRaycastDistance;
+    [SerializeField] private float SizeShrinkMultiplier;
+    [SerializeField] private BoxCollider Collider;
     
     public event Action OnCollideWithEnemy;
 
@@ -16,6 +17,16 @@ public class PlayerBlock : MonoBehaviour
     private TrailRenderer _trail;
     private bool _boxHitDetected;
     private Rigidbody _body;
+
+    [Inject]
+    public void Init(BlockManager blockManager, PlayerBehaviour playerBehaviour)
+    {
+        blockManager.AddBlock(this);
+        
+        OnCollideWithEnemy += blockManager.RemoveBlock;
+        
+        playerBehaviour.OnBlockSpawned(transform.position + Vector3.up);
+    }
 
     private void Awake()
     {
@@ -30,9 +41,9 @@ public class PlayerBlock : MonoBehaviour
 
     private void CheckForAnyEnemyBlock()
     {
-        Vector3 boxSize = transform.localScale / _sizeShrinkMultiplier;
+        Vector3 boxSize = transform.localScale / SizeShrinkMultiplier;
 
-        Collider[] colliders = Physics.OverlapBox(_collider.bounds.center + Vector3.forward * _maxRaycastDistance, boxSize, transform.rotation);
+        Collider[] colliders = Physics.OverlapBox(Collider.bounds.center + Vector3.forward * MaxRaycastDistance, boxSize, transform.rotation);
         _boxHitDetected = colliders != null;
         
         if (!_boxHitDetected)
@@ -58,13 +69,13 @@ public class PlayerBlock : MonoBehaviour
 
         if (_boxHitDetected)
         {
-            Gizmos.DrawRay(_collider.bounds.center, transform.forward * _boxHitInfo.distance);
-            Gizmos.DrawWireCube(_collider.bounds.center + transform.forward * _boxHitInfo.distance, transform.localScale / _sizeShrinkMultiplier);
+            Gizmos.DrawRay(Collider.bounds.center, transform.forward * _boxHitInfo.distance);
+            Gizmos.DrawWireCube(Collider.bounds.center + transform.forward * _boxHitInfo.distance, transform.localScale / SizeShrinkMultiplier);
         }
         else
         {
-            Gizmos.DrawRay(_collider.bounds.center, transform.forward * _maxRaycastDistance);
-            Gizmos.DrawWireCube(_collider.bounds.center + transform.forward * _maxRaycastDistance, transform.localScale / _sizeShrinkMultiplier);
+            Gizmos.DrawRay(Collider.bounds.center, transform.forward * MaxRaycastDistance);
+            Gizmos.DrawWireCube(Collider.bounds.center + transform.forward * MaxRaycastDistance, transform.localScale / SizeShrinkMultiplier);
         }
     }
 #endif
